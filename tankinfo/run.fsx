@@ -2,15 +2,16 @@
 
 open System.Net
 open System.Net.Http
+open Newtonsoft.Json
 
 let Run(req: HttpRequestMessage, log: TraceWriter) =
-    log.Info(sprintf 
-        "F# HTTP trigger function processed a request.")
+    log.Info(sprintf "F# HTTP trigger function processed a request.")
 
-    // Set name to query string
-    let name =
-        req.GetQueryNameValuePairs()
-        |> Seq.tryFind (fun q -> q.Key = "name")
-        |> fun x -> x.Value
+    let info = {
+        name = "AWI"
+        owner = "TechTalk"
+    }
+
+    let json = JsonConvert.SerializeObject(info);
     
-    req.CreateResponse(HttpStatusCode.OK, "Hello " + name.Value);
+    req.CreateResponse(HttpStatusCode.OK, json);
